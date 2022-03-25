@@ -29,22 +29,6 @@ class Game {
 		this.kill();
 	}
 	getSettings() {
-		// const displaySettings = (
-		// 	settings: string[],
-		// 	values: (number | string | types.Directions)[],
-		// 	indentLevel: number = 0
-		// ) => {
-		// 	for (let i in settings) {
-		// 		const val = values[i];
-		// 		console.log("  ".repeat(indentLevel), settings[i]);
-		// 		if (typeof val !== "object")
-		// 			console.log("  ".repeat(indentLevel + 1), val);
-		// 		else {
-		// 			displaySettings(Object.keys(val), Object.values(val), 1);
-		// 		}
-		// 		console.log();
-		// 	}
-		// };
 		const displaySettings = (
 			settings: string[],
 			values: (number | string | types.Directions)[],
