@@ -1,12 +1,12 @@
-export type Directions = [
-  up: string,
-  down: string,
-  left: string,
-  right: string
-];
+export type Directions = {
+	up: string;
+	down: string;
+	left: string;
+	right: string;
+}
 
 export type Settings = {
-  boardWidth: number,
-  boardHeight: number,
-  movementKeys: Directions,
+	readonly boardWidth: number;
+	readonly boardHeight: number;
+	movementKeys: Directions;
 }
