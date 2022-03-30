@@ -14,3 +14,6 @@ export type TGameSettings = {
 	readonly boardHeight: number;
 };
 
+export type TSnakeCoords = [number, number];
+
+export type TSnakeDir = "up" | "down" | "left" | "right";

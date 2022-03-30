@@ -1,19 +1,19 @@
-import argsParser from "args-parser";
 import Settings from "./settings";
 
 class GameInit {
 	readonly args: any;
 	constructor(args?: any) {
-		this.args = args || argsParser(process.argv);
+		this.args = args;
 		this.handleParams();
 	}
-	handleParams(): void | true {
+	private handleParams(): void | true {
 		// returns true if game should be started.
-		if (!this.args) return true;
-		if (this.args.h || this.args.help) return this.getHelp();
-		if (this.args.c || this.args.settings) return Settings.getUserSettings();
-		if (this.args.set) return Settings.setUserSettings(this.args);
-		console.log("Invalid arguments passed. To start the game, pass no arguments.");
+		if (Object.keys(this.args).length === 0) return true;
+		else if (this.args.h || this.args.help) this.getHelp();
+		else if (this.args.c || this.args.settings) Settings.getUserSettings();
+		else if (this.args.set) Settings.setUserSettings(this.args);
+		else console.log("Invalid arguments passed. To start the game, pass no arguments.");
+		console.log(this.args);
 	}
 	getHelp(): void {
 		console.log(
@@ -48,4 +48,4 @@ class GameInit {
 	}
 }
 
-new GameInit();
+export default GameInit;

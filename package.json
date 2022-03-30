@@ -9,7 +9,7 @@
 		"node-bin-setup": "^1.1.0"
 	},
 	"scripts": {
-		"start": "ts-node --files main.ts"
+		"start": "ts-node --files game.ts"
 	},
 	"repository": {
 		"type": "git",
