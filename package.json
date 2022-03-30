@@ -9,7 +9,7 @@
 		"node-bin-setup": "^1.1.0"
 	},
 	"scripts": {
-		"start": "tsc && node main.js && rm *.js"
+		"start": "ts-node --files main.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -27,6 +27,7 @@
 	},
 	"homepage": "https://github.com/creemy0cheesekake/node-snake#readme",
 	"devDependencies": {
-		"@types/node": "^17.0.21"
+		"@types/node": "^17.0.21",
+		"ts-node-dev": "^1.1.8"
 	}
 }

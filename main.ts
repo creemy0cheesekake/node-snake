@@ -1,65 +1,51 @@
 import argsParser from "args-parser";
-import settings from "./settings";
-import * as types from "./types";
+import Settings from "./settings";
 
-class Game {
+class GameInit {
 	readonly args: any;
-	constructor(args: any) {
+	constructor(args?: any) {
 		this.args = args || argsParser(process.argv);
 		this.handleParams();
 	}
-	main() {
-		console.log("main method");
+	handleParams(): void | true {
+		// returns true if game should be started.
+		if (!this.args) return true;
+		if (this.args.h || this.args.help) return this.getHelp();
+		if (this.args.c || this.args.settings) return Settings.getUserSettings();
+		if (this.args.set) return Settings.setUserSettings(this.args);
+		console.log("Invalid arguments passed. To start the game, pass no arguments.");
 	}
-	handleParams() {
-		if (this.args.h || this.args.help) this.getHelp();
-		if (
-			typeof this.args.c === "boolean" ||
-			typeof this.args.settings === "boolean"
-		)
-			this.getSettings();
-		if (
-			typeof this.args.c !== "boolean" ||
-			typeof this.args.settings !== "boolean"
-		)
-			this.setSettings();
-	}
-	getHelp() {
-		console.log("");
-		this.kill();
-	}
-	getSettings() {
-		const displaySettings = (
-			settings: string[],
-			values: (number | string | types.Directions)[],
-			indentLevel: number = 0
-		) => {
-			for (let i in settings) {
-				const val = values[i];
-				if (typeof val !== "object")
-					console.log(
-						"  ".repeat(indentLevel),
-						`${settings[i]}:`,
-						val
-					);
-				else {
-					console.log(` ${settings[i]}:`);
-					displaySettings(Object.keys(val), Object.values(val), 1);
-				}
-				console.log();
-			}
-		};
-		displaySettings(Object.keys(settings), Object.values(settings));
-		this.kill();
-	}
-	setSettings() {
-		console.log("");
-		this.kill();
-	}
-	kill() {
-		process.exit(0);
+	getHelp(): void {
+		console.log(
+			String.raw`
+     _   _  ___  ____  _____     ____  _   _    _    _  _______
+    | \ | |/ _ \|  _ \| ____|   / ___|| \ | |  / \  | |/ / ____|
+    |  \| | | | | | | |  _|     \___ \|  \| | / _ \ | ' /|  _|
+    | |\  | |_| | |_| | |___     ___) | |\  |/ ___ \|   \| |___
+    |_| \_|\___/|____/|_____|   |____/|_| \_/_/   \_\_|\_\_____|
+
+
+
+    BASIC OPTIONS
+        --help          Shows this message.
+        -h              Same as "--help".
+        
+        --settings      Shows settings.
+        -c              Same as "--settings".
+
+        --set           Enables you to change the game settings. Follow
+                        "--set" with "--SETTING_NAME=VALUE" and replace
+                        the placeholder with your values.
+
+    GAME SETTINGS
+        --mkeyup        The key used to move upwards.
+        --mkeydown      The key used to move downwards.
+        --mkeyleft      The key used to move upwards.
+        --mkeyright     The key used to move upwards.
+        
+`
+		);
 	}
 }
 
-const game = new Game({ c: true });
-game.main();
+new GameInit();

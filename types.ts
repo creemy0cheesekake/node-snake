@@ -1,12 +1,16 @@
-export type Directions = {
+export type TDirections = {
 	up: string;
 	down: string;
 	left: string;
 	right: string;
-}
+};
 
-export type Settings = {
+export type TUserSettings = {
+	movementKeys: TDirections;
+};
+
+export type TGameSettings = {
 	readonly boardWidth: number;
 	readonly boardHeight: number;
-	movementKeys: Directions;
-}
+};
+
