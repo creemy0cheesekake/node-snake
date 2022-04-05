@@ -4,8 +4,8 @@ import fs from "fs";
 
 class Settings {
 	static readonly gameSettings: types.TGameSettings = {
-		boardWidth: 30,
-		boardHeight: 20,
+		boardWidth: 90,
+		boardHeight: 50,
 	};
 
 	static userSettings: types.TUserSettings = snakeUserSettings;

@@ -45,27 +45,27 @@ class Game {
 			for (let i of row) temp += `${i} `;
 			console.log(temp.trim());
 		}
-		const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 		(async () => {
-			await delay(100);
+			await new Promise(resolve => setTimeout(resolve, 50));
 			this.moveSnake();
-			console.log(this.snakePosStack);
+			console.log(`Score: ${this.snakeLen - 1}`);
 		})();
 	}
 	drawSnake() {
 		for (let s of this.snakePosStack) this.board[s[1]][s[0]] = SNAKE_CHAR;
 	}
 	moveSnake() {
-		this.prevSnakePos = this.snakePos;
+		this.prevSnakePos = [this.snakePos[0], this.snakePos[1]];
 		if (this.snakeDir === "left" || this.snakeDir === "right")
 			this.snakePos[0] += this.snakeDir === "right" ? 1 : -1;
 		if (this.snakeDir === "up" || this.snakeDir === "down")
 			this.snakePos[1] += this.snakeDir === "down" ? 1 : -1;
-		for (let i = this.snakePosStack.length - 1; i > 0; i--) {
-			this.snakePosStack[i] = this.snakePosStack[i - 1];
+		for (let i = this.snakeLen; i > 0; i--) {
+			this.snakePosStack[i] = [...this.snakePosStack[i - 1]];
 		}
 		this.displayBoard();
 		this.checkForBorderCrash();
+		this.checkForSelfCrash();
 		this.checkForFoodEat();
 	}
 	checkForBorderCrash() {
@@ -75,11 +75,22 @@ class Game {
 			this.snakePos[1] === 0 ||
 			this.snakePos[1] == boardHeight - 1
 		)
-			process.exit(0);
+			this.endGame();
+	}
+	checkForSelfCrash() {
+		let arr: types.TSnakeCoords[] = [];
+		for (let i = 1; i < this.snakeLen; i++)
+			for (let j = 1; j < this.snakeLen; j++)
+				if (
+					this.snakePosStack[i].toString() === this.snakePosStack[j].toString() &&
+					i !== j
+				)
+					this.endGame();
+		console.log(arr, arr.length);
 	}
 	checkForFoodEat() {
 		if (this.snakePos.toString() === this.foodPos.toString()) {
-			this.snakePosStack.push([...this.prevSnakePos]);
+			this.snakePosStack.push(this.prevSnakePos);
 			this.snakeLen++;
 			this.generateFood();
 		}
@@ -110,7 +121,7 @@ class Game {
 				case "q":
 					process.exit(0);
 				case "c":
-					key.ctrl && process.exit(0);
+					key.ctrl && this.endGame();
 					break;
 			}
 		});
@@ -121,6 +132,11 @@ class Game {
 			~~(Math.random() * (boardHeight - 2)) + 1,
 		];
 		this.board[this.foodPos[1]][this.foodPos[0]] = FOOD_CHAR;
+	}
+	endGame() {
+		console.log("Game Over!");
+		console.log(`Score: ${this.snakeLen - 1}`);
+		process.exit(0);
 	}
 }
 
