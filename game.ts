@@ -4,6 +4,7 @@ import argsParser from "args-parser";
 import * as types from "./types";
 
 const { boardWidth, boardHeight } = Settings.gameSettings;
+const HIGH_SCORE = Settings.getHighScore();
 const BORDER_CHAR = "X";
 const SNAKE_CHAR = "O";
 const FOOD_CHAR = ".";
@@ -46,7 +47,7 @@ class Game {
 			console.log(temp.trim());
 		}
 		(async () => {
-			await new Promise(resolve => setTimeout(resolve, 50));
+			await new Promise(resolve => setTimeout(resolve, 10));
 			this.moveSnake();
 			console.log(`Score: ${this.snakeLen - 1}`);
 		})();
@@ -134,8 +135,15 @@ class Game {
 		this.board[this.foodPos[1]][this.foodPos[0]] = FOOD_CHAR;
 	}
 	endGame() {
+		let newHS = false;
 		console.log("Game Over!");
 		console.log(`Score: ${this.snakeLen - 1}`);
+		if (this.snakeLen - 1 > HIGH_SCORE) {
+			newHS = true;
+			Settings.setHighScore(this.snakeLen - 1);
+			console.log(`High Score: ${this.snakeLen - 1}`);
+		}
+		newHS && console.log("New High Score!!!");
 		process.exit(0);
 	}
 }

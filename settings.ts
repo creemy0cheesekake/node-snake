@@ -1,5 +1,6 @@
 import * as types from "./types";
 import snakeUserSettings from "./snake-user-settings.json";
+import highScore from "./highScore.json";
 import fs from "fs";
 
 class Settings {
@@ -14,7 +15,6 @@ class Settings {
 		...this.userSettings,
 		...this.gameSettings,
 	};
-	static x = 21;
 
 	static getUserSettings() {
 		const displaySettings = (
@@ -48,6 +48,12 @@ class Settings {
 		if (JSON.stringify(oldSettings) == JSON.stringify(this.userSettings))
 			console.log("No settings modified.");
 		else console.log("Setting successfully written");
+	}
+	static setHighScore(newScore: number) {
+		fs.writeFileSync("./highScore.json", JSON.stringify({ highScore: newScore }, null, "\t"));
+	}
+	static getHighScore() {
+		return highScore.highScore;
 	}
 }
 
