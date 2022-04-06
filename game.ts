@@ -47,7 +47,7 @@ class Game {
 			console.log(temp.trim());
 		}
 		(async () => {
-			await new Promise(resolve => setTimeout(resolve, 10));
+			await new Promise(resolve => setTimeout(resolve, 100));
 			this.moveSnake();
 			console.log(`Score: ${this.snakeLen - 1}`);
 		})();
