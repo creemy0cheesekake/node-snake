@@ -8,6 +8,7 @@ const HIGH_SCORE = Settings.getHighScore();
 const BORDER_CHAR = 'X';
 const SNAKE_CHAR = 'O';
 const FOOD_CHAR = '.';
+let lockMovement = false;
 
 class Game {
 	board: string[][];
@@ -101,6 +102,7 @@ class Game {
 	clear() {
 		console.clear();
 		this.board = this.board.map(el => el.map(i => (i === SNAKE_CHAR ? ' ' : i)));
+		lockMovement = false;
 	}
 	handleKeys() {
 		const { down, up, left, right } = Settings.userSettings.movementKeys;
@@ -110,16 +112,22 @@ class Game {
 		process.stdin.on('keypress', (_, key) => {
 			switch (key.name) {
 				case up:
-					this.snakeDir !== 'down' && (this.snakeDir = 'up');
+					if (!lockMovement) this.snakeDir !== 'down' && (this.snakeDir = 'up');
+					lockMovement = true;
 					break;
 				case down:
-					this.snakeDir !== 'up' && (this.snakeDir = 'down');
+					if (!lockMovement) this.snakeDir !== 'up' && (this.snakeDir = 'down');
+					lockMovement = true;
 					break;
 				case left:
-					this.snakeDir !== 'right' && (this.snakeDir = 'left');
+					if (!lockMovement)
+						this.snakeDir !== 'right' && (this.snakeDir = 'left');
+					lockMovement = true;
 					break;
 				case right:
-					this.snakeDir !== 'left' && (this.snakeDir = 'right');
+					if (!lockMovement)
+						this.snakeDir !== 'left' && (this.snakeDir = 'right');
+					lockMovement = true;
 					break;
 				case 'q':
 					process.exit(0);
