@@ -4,5 +4,9 @@
 		"down": "j",
 		"left": "h",
 		"right": "l"
+	},
+	"size": {
+		"boardWidth": 90,
+		"boardHeight": 50
 	}
 }

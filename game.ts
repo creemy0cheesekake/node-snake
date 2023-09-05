@@ -1,13 +1,13 @@
-import GameInit from "./gameinit";
-import Settings from "./settings";
-import argsParser from "args-parser";
-import * as types from "./types";
+import GameInit from './gameinit';
+import Settings from './settings';
+import argsParser from 'args-parser';
+import * as types from './types';
 
 const { boardWidth, boardHeight } = Settings.gameSettings;
 const HIGH_SCORE = Settings.getHighScore();
-const BORDER_CHAR = "X";
-const SNAKE_CHAR = "O";
-const FOOD_CHAR = ".";
+const BORDER_CHAR = 'X';
+const SNAKE_CHAR = 'O';
+const FOOD_CHAR = '.';
 
 class Game {
 	board: string[][];
@@ -15,7 +15,7 @@ class Game {
 	prevSnakePos: types.TSnakeCoords = [~~(boardWidth / 2), ~~(boardHeight / 2)];
 	snakePosStack: types.TSnakeCoords[] = [this.snakePos];
 	snakeLen: number = 1;
-	snakeDir: types.TSnakeDir = "left";
+	snakeDir: types.TSnakeDir = 'left';
 	foodPos: types.TSnakeCoords = [
 		~~(Math.random() * (boardWidth - 2)) + 1,
 		~~(Math.random() * (boardHeight - 2)) + 1,
@@ -24,13 +24,15 @@ class Game {
 		const status = new GameInit(argsParser(process.argv)).handleParams();
 		!status && process.exit(0);
 		this.board = Array(boardHeight)
-			.fill("")
+			.fill('')
 			.map((_, i) =>
 				i === 0 || i === boardHeight - 1
 					? Array(boardWidth).fill(BORDER_CHAR)
 					: Array(boardWidth)
-							.fill("")
-							.map((_, i) => (i === 0 || i === boardWidth - 1 ? BORDER_CHAR : " "))
+							.fill('')
+							.map((_, i) =>
+								i === 0 || i === boardWidth - 1 ? BORDER_CHAR : ' ',
+							),
 			);
 	}
 	main() {
@@ -42,7 +44,7 @@ class Game {
 		this.clear();
 		this.drawSnake();
 		for (let row of this.board) {
-			let temp = "";
+			let temp = '';
 			for (let i of row) temp += `${i} `;
 			console.log(temp.trim());
 		}
@@ -57,10 +59,10 @@ class Game {
 	}
 	moveSnake() {
 		this.prevSnakePos = [this.snakePos[0], this.snakePos[1]];
-		if (this.snakeDir === "left" || this.snakeDir === "right")
-			this.snakePos[0] += this.snakeDir === "right" ? 1 : -1;
-		if (this.snakeDir === "up" || this.snakeDir === "down")
-			this.snakePos[1] += this.snakeDir === "down" ? 1 : -1;
+		if (this.snakeDir === 'left' || this.snakeDir === 'right')
+			this.snakePos[0] += this.snakeDir === 'right' ? 1 : -1;
+		if (this.snakeDir === 'up' || this.snakeDir === 'down')
+			this.snakePos[1] += this.snakeDir === 'down' ? 1 : -1;
 		for (let i = this.snakeLen; i > 0; i--) {
 			this.snakePosStack[i] = [...this.snakePosStack[i - 1]];
 		}
@@ -83,11 +85,11 @@ class Game {
 		for (let i = 1; i < this.snakeLen; i++)
 			for (let j = 1; j < this.snakeLen; j++)
 				if (
-					this.snakePosStack[i].toString() === this.snakePosStack[j].toString() &&
+					this.snakePosStack[i].toString() ===
+						this.snakePosStack[j].toString() &&
 					i !== j
 				)
 					this.endGame();
-		console.log(arr, arr.length);
 	}
 	checkForFoodEat() {
 		if (this.snakePos.toString() === this.foodPos.toString()) {
@@ -98,30 +100,30 @@ class Game {
 	}
 	clear() {
 		console.clear();
-		this.board = this.board.map(el => el.map(i => (i === SNAKE_CHAR ? " " : i)));
+		this.board = this.board.map(el => el.map(i => (i === SNAKE_CHAR ? ' ' : i)));
 	}
 	handleKeys() {
 		const { down, up, left, right } = Settings.userSettings.movementKeys;
-		require("readline").emitKeypressEvents(process.stdin);
+		require('readline').emitKeypressEvents(process.stdin);
 		process.stdin.setRawMode(true);
 
-		process.stdin.on("keypress", (_, key) => {
+		process.stdin.on('keypress', (_, key) => {
 			switch (key.name) {
 				case up:
-					this.snakeDir !== "down" && (this.snakeDir = "up");
+					this.snakeDir !== 'down' && (this.snakeDir = 'up');
 					break;
 				case down:
-					this.snakeDir !== "up" && (this.snakeDir = "down");
+					this.snakeDir !== 'up' && (this.snakeDir = 'down');
 					break;
 				case left:
-					this.snakeDir !== "right" && (this.snakeDir = "left");
+					this.snakeDir !== 'right' && (this.snakeDir = 'left');
 					break;
 				case right:
-					this.snakeDir !== "left" && (this.snakeDir = "right");
+					this.snakeDir !== 'left' && (this.snakeDir = 'right');
 					break;
-				case "q":
+				case 'q':
 					process.exit(0);
-				case "c":
+				case 'c':
 					key.ctrl && this.endGame();
 					break;
 			}
@@ -136,14 +138,15 @@ class Game {
 	}
 	endGame() {
 		let newHS = false;
-		console.log("Game Over!");
+		console.log('Game Over!');
 		console.log(`Score: ${this.snakeLen - 1}`);
 		if (this.snakeLen - 1 > HIGH_SCORE) {
 			newHS = true;
 			Settings.setHighScore(this.snakeLen - 1);
 			console.log(`High Score: ${this.snakeLen - 1}`);
-		}
-		newHS && console.log("New High Score!!!");
+		} else console.log(`High Score: ${HIGH_SCORE}`);
+
+		newHS && console.log('New High Score!!!');
 		process.exit(0);
 	}
 }
